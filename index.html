@@ -175,7 +175,7 @@
             <li><button onclick="switchPage('mission')" id="nav-mission">MISSION</button></li>
             <li><button onclick="switchPage('about')" id="nav-about">ABOUT</button></li>
             <li><button onclick="switchPage('contact')" id="nav-contact">CONTACT</button></li>
-            <li><a href="./dashboard.html" style="color: var(--red); font-size: 0.85rem; font-weight: 600; text-decoration: none;">DEMOS</a></li>
+            <li><a href="dashboard.html" style="color: var(--red); font-size: 0.85rem; font-weight: 600; text-decoration: none;">DEMOS</a></li>
         </ul>
     </nav>
 
@@ -210,6 +210,34 @@
             </div>
         </section>
 
+        <!-- BEFORE/AFTER TRANSFORMATION -->
+        <section style="padding: 4rem 5%; background: linear-gradient(180deg, #fff 0%, var(--navy-soft) 50%, #fff 100%); position: relative;">
+            <div style="position: absolute; top: 20%; right: 5%; font-size: 200px; opacity: 0.02; color: var(--navy); transform: rotate(-10deg);">⚓</div>
+            <h2 class="section-title">See The Transformation</h2>
+            <p class="section-subtitle">Slide to see how we turn chaos into calm</p>
+            <div style="max-width: 1000px; margin: 0 auto; position: relative; z-index: 1;">
+                <div style="border-radius: 16px; overflow: hidden; box-shadow: 0 25px 80px rgba(0,51,102,0.2), 0 0 0 3px white;">
+                    <iframe src="before-after.html" style="width: 100%; height: 500px; border: none;" title="Before & After Transformation"></iframe>
+                </div>
+                <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; opacity: 0.7;">👆 Drag the slider to compare before & after</p>
+            </div>
+        </section>
+
+        <!-- ROI CALCULATOR -->
+        <section class="bg-light" style="position: relative;">
+            <div style="position: absolute; bottom: 10%; left: 5%; font-size: 180px; opacity: 0.02; color: var(--red);">💰</div>
+            <h2 class="section-title">What's Your Time Worth?</h2>
+            <p class="section-subtitle">See how much you could save with automation</p>
+            <div style="max-width: 900px; margin: 0 auto; position: relative; z-index: 1;">
+                <div style="border-radius: 16px; overflow: hidden; box-shadow: 0 25px 80px rgba(0,51,102,0.15), 0 0 0 3px white; background: white;">
+                    <iframe src="roi-calculator.html" style="width: 100%; height: 600px; border: none;" title="ROI Calculator"></iframe>
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button onclick="switchPage('contact')" class="cta-button">Let's Make It Happen →</button>
+                </div>
+            </div>
+        </section>
+
         <section>
             <h2 class="section-title">The Captain's Story</h2>
             <div style="display: flex; gap: 3rem; align-items: center; max-width: 1000px; margin: 2rem auto 0; flex-wrap: wrap;">
@@ -220,7 +248,7 @@
                     <p style="margin-bottom: 1.5rem; font-size: 1.1rem; line-height: 1.8;">I built Anchor AI because I was done watching brilliant business owners run themselves into the ground. Done watching people pour their souls into their work while their systems (or lack of them) slowly drained the life out of them.</p>
                     <p style="margin-bottom: 1.5rem; font-size: 1.1rem; line-height: 1.8;">This isn't just a business. It's a mission. A whole movement for the owners who give and give and give... and get the least support in return.</p>
                     <p style="font-weight: 600; color: var(--navy); font-size: 1.3rem;">We don't rise by accident — we rise by design.</p>
-                    <p style="font-style: italic; margin-top: 1.5rem; color: var(--slate);">— Brinkley Elliott, Founder & Captain<br>Southport, NC</p>
+                    <p style="font-style: italic; margin-top: 1.5rem; color: var(--medium-gray); opacity: 0.8;">— Brinkley Elliott, Founder & Captain<br>Southport, NC</p>
                 </div>
             </div>
         </section>
@@ -328,13 +356,21 @@
             <div class="attribution">— Brinkley Elliott, Founder</div>
         </div>
 
-        <!-- Dashboard Preview -->
-        <section style="padding: 4rem 5%; background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);">
+        <!-- Dashboard Preview - INTERACTIVE EMBED -->
+        <section style="padding: 4rem 5%; background: linear-gradient(180deg, var(--navy-soft) 0%, #fff 50%, var(--red-soft) 100%); position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 10%; left: 5%; font-size: 150px; opacity: 0.03; color: var(--navy);">⚓</div>
             <h2 class="section-title">See Your Command Center</h2>
-            <p class="section-subtitle">A sneak peek at what running your business could look like</p>
-            <div style="max-width: 1000px; margin: 0 auto; text-align: center;">
-                <img src="dashboard-preview.jpg" alt="Dashboard Preview" style="width: 100%; max-width: 900px; border-radius: 16px; box-shadow: 0 25px 80px rgba(0,51,102,0.2); border: 4px solid white;" onerror="this.outerHTML='<div style=\\'width:100%;max-width:900px;height:400px;margin:0 auto;border-radius:16px;background:linear-gradient(135deg,#003366,#001a33);display:flex;align-items:center;justify-content:center;color:white;font-size:16px;text-align:center;padding:40px;box-shadow:0 25px 80px rgba(0,51,102,0.2);\\'>📊 DASHBOARD PREVIEW<br><br>Upload dashboard-preview.jpg to GitHub<br>or screenshot your demo dashboard!</div>';">
-                <p style="margin-top: 1.5rem;"><a href="dashboard.html" style="color: var(--red); font-weight: 600; text-decoration: none;">Try the Interactive Demo →</a></p>
+            <p class="section-subtitle">This isn't a mockup. Play with it. Click around. This is what your business could look like.</p>
+            <div style="max-width: 1100px; margin: 0 auto; text-align: center; position: relative; z-index: 1;">
+                <div style="border-radius: 20px; overflow: hidden; box-shadow: 0 30px 100px rgba(0,51,102,0.25), 0 0 0 4px white; background: #0f172a;">
+                    <iframe src="dashboard.html" style="width: 100%; height: 650px; border: none; border-radius: 16px;" title="Anchor AI Dashboard Demo"></iframe>
+                </div>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="dashboard.html" target="_blank" class="cta-button">Open Full Demo ↗</a>
+                    <a href="booking.html" target="_blank" style="padding: 1.1rem 2.2rem; background: var(--navy); color: white; text-decoration: none; font-size: 1rem; font-weight: 700; border-radius: 8px; transition: all 0.3s; box-shadow: 0 6px 20px rgba(0,51,102,0.3);">See Booking Flow ↗</a>
+                    <a href="roi-calculator.html" target="_blank" style="padding: 1.1rem 2.2rem; background: transparent; color: var(--navy); text-decoration: none; font-size: 1rem; font-weight: 700; border-radius: 8px; border: 2px solid var(--navy); transition: all 0.3s;">Calculate Your ROI ↗</a>
+                </div>
+                <p style="margin-top: 1.5rem; font-size: 0.9rem; opacity: 0.7;">👆 Click the sidebar tabs to explore different features</p>
             </div>
         </section>
     </div>
