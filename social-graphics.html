@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anchor AI - Social Media Graphics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 16px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin: 48px 0 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #334155;
+        }
+
+        .graphics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .graphic-container {
+            text-align: center;
+        }
+
+        .graphic-label {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+        }
+
+        /* Instagram Post - Square 1080x1080 scaled down */
+        .ig-post {
+            width: 320px;
+            height: 320px;
+            margin: 0 auto;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ===== GRAPHIC 1: Hook Post ===== */
+        .graphic-hook {
+            background: linear-gradient(135deg, #003366 0%, #001a33 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .graphic-hook .icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .graphic-hook h2 {
+            font-size: 22px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .graphic-hook .highlight {
+            color: #ff4444;
+        }
+
+        .graphic-hook .subtext {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 20px;
+        }
+
+        .graphic-hook .logo {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            font-size: 20px;
+            opacity: 0.8;
+        }
+
+        /* ===== GRAPHIC 2: Stats Post ===== */
+        .graphic-stats {
+            background: linear-gradient(180deg, #003366 0%, #000 100%);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .graphic-stats .header {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .graphic-stats .big-number {
+            font-size: 72px;
+            font-weight: 900;
+            color: #22c55e;
+            line-height: 1;
+        }
+
+        .graphic-stats .unit {
+            font-size: 24px;
+            color: #22c55e;
+        }
+
+        .graphic-stats .label {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 8px;
+            margin-bottom: 24px;
+        }
+
+        .graphic-stats .detail {
+            font-size: 11px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .graphic-stats .logo {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+        }
+
+        /* ===== GRAPHIC 3: Before/After ===== */
+        .graphic-ba {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 100%;
+        }
+
+        .graphic-ba .side {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .graphic-ba .before {
+            background: linear-gradient(180deg, #1a0000 0%, #330000 100%);
+        }
+
+        .graphic-ba .after {
+            background: linear-gradient(180deg, #001a00 0%, #003300 100%);
+        }
+
+        .graphic-ba .side-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            opacity: 0.7;
+        }
+
+        .graphic-ba .icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .graphic-ba .stat {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .graphic-ba .before .stat {
+            color: #ef4444;
+        }
+
+        .graphic-ba .after .stat {
+            color: #22c55e;
+        }
+
+        .graphic-ba .desc {
+            font-size: 10px;
+            color: #94a3b8;
+            margin-top: 8px;
+        }
+
+        /* ===== GRAPHIC 4: Quote Post ===== */
+        .graphic-quote {
+            background: linear-gradient(135deg, #003366 0%, #002244 100%);
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .graphic-quote .quote-mark {
+            font-size: 48px;
+            color: #cc0000;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .graphic-quote .quote-text {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.4;
+            font-style: italic;
+        }
+
+        .graphic-quote .author {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .graphic-quote .logo {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            font-size: 20px;
+        }
+
+        /* ===== GRAPHIC 5: Tip Post ===== */
+        .graphic-tip {
+            background: #003366;
+            padding: 24px;
+            text-align: left;
+        }
+
+        .graphic-tip .badge {
+            display: inline-block;
+            background: #cc0000;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .graphic-tip h2 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .graphic-tip .tips-list {
+            list-style: none;
+        }
+
+        .graphic-tip .tips-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .graphic-tip .tips-list .num {
+            background: rgba(255,255,255,0.1);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .graphic-tip .logo {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            font-size: 20px;
+        }
+
+        /* ===== GRAPHIC 6: CTA Post ===== */
+        .graphic-cta {
+            background: linear-gradient(135deg, #cc0000 0%, #990000 100%);
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .graphic-cta .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .graphic-cta h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .graphic-cta .subtext {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 24px;
+        }
+
+        .graphic-cta .button {
+            background: white;
+            color: #cc0000;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        /* ===== GRAPHIC 7: Problem/Solution ===== */
+        .graphic-problem {
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .graphic-problem .top {
+            padding-bottom: 16px;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 16px;
+        }
+
+        .graphic-problem .label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ef4444;
+            margin-bottom: 8px;
+        }
+
+        .graphic-problem .bottom .label {
+            color: #22c55e;
+        }
+
+        .graphic-problem .text {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .graphic-problem .logo {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+        }
+
+        /* ===== GRAPHIC 8: Services ===== */
+        .graphic-services {
+            background: linear-gradient(135deg, #003366 0%, #001a33 100%);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .graphic-services .header {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #cc0000;
+            margin-bottom: 12px;
+        }
+
+        .graphic-services h2 {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .graphic-services .services-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .graphic-services .service-item {
+            background: rgba(255,255,255,0.05);
+            padding: 12px 8px;
+            border-radius: 8px;
+            font-size: 10px;
+        }
+
+        .graphic-services .service-item .icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .graphic-services .logo {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            font-size: 20px;
+        }
+
+        /* ===== Story Templates ===== */
+        .ig-story {
+            width: 180px;
+            height: 320px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .story-poll {
+            background: linear-gradient(180deg, #003366 0%, #000 100%);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .story-poll .question {
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 24px;
+            line-height: 1.3;
+        }
+
+        .story-poll .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: auto;
+            margin-bottom: 40px;
+        }
+
+        .story-poll .option {
+            background: rgba(255,255,255,0.1);
+            padding: 14px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .story-poll .option:first-child {
+            background: #cc0000;
+        }
+
+        .story-cta {
+            background: linear-gradient(180deg, #cc0000 0%, #990000 100%);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+        }
+
+        .story-cta .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .story-cta h2 {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .story-cta .subtext {
+            font-size: 11px;
+            opacity: 0.9;
+            margin-bottom: 24px;
+        }
+
+        .story-cta .swipe {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.8;
+        }
+
+        .story-cta .swipe-arrow {
+            font-size: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Download hint */
+        .download-hint {
+            text-align: center;
+            margin-top: 48px;
+            padding: 24px;
+            background: #1e293b;
+            border-radius: 12px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .download-hint h3 {
+            margin-bottom: 12px;
+        }
+
+        .download-hint p {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <h1>⚓ Anchor AI Social Media Graphics</h1>
+    <p class="subtitle">Screenshot these or right-click → Save Image for your posts!</p>
+
+    <h2 class="section-title">📱 Instagram Posts (1:1)</h2>
+    <div class="graphics-grid">
+        
+        <!-- Hook Post -->
+        <div class="graphic-container">
+            <div class="graphic-label">Hook Post - Attention Grabber</div>
+            <div class="ig-post graphic-hook">
+                <div class="icon">😰</div>
+                <h2>Still doing your invoices <span class="highlight">manually?</span></h2>
+                <p class="subtext">There's a better way →</p>
+                <div class="logo">⚓</div>
+            </div>
+        </div>
+
+        <!-- Stats Post -->
+        <div class="graphic-container">
+            <div class="graphic-label">Stats Post - Social Proof</div>
+            <div class="ig-post graphic-stats">
+                <div class="header">Average Client Results</div>
+                <div class="big-number">42<span class="unit">hrs</span></div>
+                <div class="label">saved per month</div>
+                <div class="detail">That's over a full work week<br>back in your pocket every month</div>
+                <div class="logo">⚓</div>
+            </div>
+        </div>
+
+        <!-- Before/After -->
+        <div class="graphic-container">
+            <div class="graphic-label">Before/After Comparison</div>
+            <div class="ig-post graphic-ba">
+                <div class="side before">
+                    <div class="side-label">Before</div>
+                    <div class="icon">😫</div>
+                    <div class="stat">20+</div>
+                    <div class="desc">hours/week<br>on admin</div>
+                </div>
+                <div class="side after">
+                    <div class="side-label">After</div>
+                    <div class="icon">😎</div>
+                    <div class="stat">2-3</div>
+                    <div class="desc">hours/week<br>on admin</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quote Post -->
+        <div class="graphic-container">
+            <div class="graphic-label">Testimonial/Quote</div>
+            <div class="ig-post graphic-quote">
+                <div class="quote-mark">"</div>
+                <div class="quote-text">I finally took a vacation without my phone blowing up. Everything just... ran.</div>
+                <div class="author">— Service Business Owner</div>
+                <div class="logo">⚓</div>
+            </div>
+        </div>
+
+        <!-- Tip Post -->
+        <div class="graphic-container">
+            <div class="graphic-label">Tips/Value Post</div>
+            <div class="ig-post graphic-tip">
+                <div class="badge">Quick Tip</div>
+                <h2>3 Automations Every Service Business Needs</h2>
+                <ul class="tips-list">
+                    <li><span class="num">1</span> Appointment reminders (reduce no-shows by 70%)</li>
+                    <li><span class="num">2</span> Auto-invoicing after each job</li>
+                    <li><span class="num">3</span> Review request 48 hrs after service</li>
+                </ul>
+                <div class="logo">⚓</div>
+            </div>
+        </div>
+
+        <!-- CTA Post -->
+        <div class="graphic-container">
+            <div class="graphic-label">Call-to-Action Post</div>
+            <div class="ig-post graphic-cta">
+                <div class="icon">📞</div>
+                <h2>Free Strategy Call</h2>
+                <div class="subtext">Let's map out your automation game plan</div>
+                <div class="button">BOOK NOW →</div>
+            </div>
+        </div>
+
+        <!-- Problem/Solution -->
+        <div class="graphic-container">
+            <div class="graphic-label">Problem → Solution</div>
+            <div class="ig-post graphic-problem">
+                <div class="top">
+                    <div class="label">❌ The Problem</div>
+                    <div class="text">You're working IN your business 60+ hours a week instead of ON it</div>
+                </div>
+                <div class="bottom">
+                    <div class="label">✅ The Solution</div>
+                    <div class="text">Systems that handle the admin so you can focus on growth</div>
+                </div>
+                <div class="logo">⚓</div>
+            </div>
+        </div>
+
+        <!-- Services -->
+        <div class="graphic-container">
+            <div class="graphic-label">Services Overview</div>
+            <div class="ig-post graphic-services">
+                <div class="header">What We Automate</div>
+                <h2>Your Business, On Autopilot</h2>
+                <div class="services-grid">
+                    <div class="service-item"><div class="icon">📅</div>Scheduling</div>
+                    <div class="service-item"><div class="icon">💰</div>Invoicing</div>
+                    <div class="service-item"><div class="icon">📧</div>Follow-ups</div>
+                    <div class="service-item"><div class="icon">⭐</div>Reviews</div>
+                    <div class="service-item"><div class="icon">👥</div>Staff</div>
+                    <div class="service-item"><div class="icon">📊</div>Reports</div>
+                </div>
+                <div class="logo">⚓</div>
+            </div>
+        </div>
+
+    </div>
+
+    <h2 class="section-title">📲 Instagram Stories (9:16)</h2>
+    <div class="graphics-grid">
+        
+        <!-- Poll Story -->
+        <div class="graphic-container">
+            <div class="graphic-label">Poll/Engagement Story</div>
+            <div class="ig-story story-poll">
+                <div class="question">How much time do you spend on admin tasks each week?</div>
+                <div class="options">
+                    <div class="option">😅 Way too much</div>
+                    <div class="option">🤷 A few hours</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Story -->
+        <div class="graphic-container">
+            <div class="graphic-label">Swipe-Up CTA Story</div>
+            <div class="ig-story story-cta">
+                <div class="icon">⚓</div>
+                <h2>Ready to get your time back?</h2>
+                <div class="subtext">Free 30-min strategy call</div>
+                <div class="swipe">Swipe Up</div>
+                <div class="swipe-arrow">↑</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="download-hint">
+        <h3>💡 How to Use These</h3>
+        <p>Right-click on any graphic → "Save Image As" or take a screenshot. These are sized for Instagram but work great on Facebook, LinkedIn, and other platforms too!</p>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anchor AI - Email Templates</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 16px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin: 48px 0 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #334155;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Email Preview Container */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto 48px;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .email-label {
+            text-align: center;
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        /* Email Header */
+        .email-header {
+            background: linear-gradient(135deg, #003366, #002244);
+            padding: 32px;
+            text-align: center;
+        }
+
+        .email-header .logo {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .email-header .brand {
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        /* Email Body */
+        .email-body {
+            padding: 32px;
+            color: #333;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .email-body h2 {
+            color: #003366;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .email-body p {
+            margin-bottom: 16px;
+        }
+
+        .email-body .greeting {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .email-body .highlight-box {
+            background: #f0f7ff;
+            border-left: 4px solid #003366;
+            padding: 20px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .email-body .highlight-box h3 {
+            color: #003366;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .email-body .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #cc0000, #aa0000);
+            color: white !important;
+            padding: 14px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            margin: 16px 0;
+        }
+
+        .email-body .btn-secondary {
+            background: linear-gradient(135deg, #003366, #002244);
+        }
+
+        .email-body ul {
+            margin: 16px 0;
+            padding-left: 20px;
+        }
+
+        .email-body li {
+            margin-bottom: 8px;
+        }
+
+        .email-body .signature {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #eee;
+        }
+
+        .email-body .signature .name {
+            font-weight: 700;
+            color: #003366;
+        }
+
+        /* Appointment Box */
+        .appointment-box {
+            background: #f8fafc;
+            border: 2px solid #003366;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+        }
+
+        .appointment-box .date {
+            font-size: 24px;
+            font-weight: 800;
+            color: #003366;
+            margin-bottom: 8px;
+        }
+
+        .appointment-box .time {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .appointment-box .details {
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* Invoice Box */
+        .invoice-box {
+            background: #fff8f8;
+            border: 2px solid #cc0000;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .invoice-box .amount {
+            font-size: 36px;
+            font-weight: 800;
+            color: #cc0000;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .invoice-box .due {
+            text-align: center;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .invoice-box table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .invoice-box td {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .invoice-box td:last-child {
+            text-align: right;
+        }
+
+        /* Review Stars */
+        .stars {
+            font-size: 32px;
+            margin: 16px 0;
+            letter-spacing: 4px;
+        }
+
+        /* Email Footer */
+        .email-footer {
+            background: #f8fafc;
+            padding: 24px 32px;
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .email-footer .social {
+            margin-bottom: 16px;
+            font-size: 20px;
+        }
+
+        .email-footer a {
+            color: #003366;
+            text-decoration: none;
+        }
+
+        /* Copy Hint */
+        .copy-hint {
+            max-width: 600px;
+            margin: 48px auto;
+            background: #1e293b;
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .copy-hint h3 {
+            margin-bottom: 12px;
+        }
+
+        .copy-hint p {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        /* Welcome Badge */
+        .welcome-badge {
+            display: inline-block;
+            background: #22c55e;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        /* Reminder Badge */
+        .reminder-badge {
+            display: inline-block;
+            background: #f59e0b;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        /* Thank You Badge */
+        .thankyou-badge {
+            display: inline-block;
+            background: #8b5cf6;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>⚓ Anchor AI Email Templates</h1>
+    <p class="subtitle">Preview how automated emails look to YOUR clients</p>
+
+    <!-- WELCOME EMAIL -->
+    <h2 class="section-title">👋 Welcome Email (New Client)</h2>
+    <div class="email-label">Sent automatically when a new client signs up</div>
+    <div class="email-container">
+        <div class="email-header">
+            <div class="logo">⚓</div>
+            <div class="brand">Demo Business</div>
+        </div>
+        <div class="email-body">
+            <span class="welcome-badge">🎉 Welcome Aboard!</span>
+            <h2>Thanks for choosing us, Sarah!</h2>
+            <p class="greeting">We're thrilled to have you as a client.</p>
+            <p>You've made a great decision! We're committed to providing you with exceptional service and making your life easier.</p>
+            
+            <div class="highlight-box">
+                <h3>📋 What Happens Next</h3>
+                <ul>
+                    <li>Your first appointment is scheduled (check below!)</li>
+                    <li>You'll receive a reminder 24 hours before</li>
+                    <li>Our technician will arrive on time, ready to go</li>
+                    <li>After service, you'll get an easy-pay invoice link</li>
+                </ul>
+            </div>
+
+            <p>If you have any questions before your appointment, just reply to this email or give us a call!</p>
+
+            <a href="#" class="btn btn-secondary">View Your Client Portal →</a>
+
+            <div class="signature">
+                <p>Talk soon,</p>
+                <p class="name">The Demo Business Team</p>
+                <p>📞 (555) 123-4567</p>
+            </div>
+        </div>
+        <div class="email-footer">
+            <div class="social">📱 💻 📧</div>
+            <p>Demo Business • 123 Main Street • City, State 12345</p>
+            <p><a href="#">Unsubscribe</a> | <a href="#">View in Browser</a></p>
+        </div>
+    </div>
+
+    <!-- APPOINTMENT REMINDER -->
+    <h2 class="section-title">⏰ Appointment Reminder (24hr)</h2>
+    <div class="email-label">Sent automatically 24 hours before appointment</div>
+    <div class="email-container">
+        <div class="email-header">
+            <div class="logo">⚓</div>
+            <div class="brand">Demo Business</div>
+        </div>
+        <div class="email-body">
+            <span class="reminder-badge">⏰ Reminder</span>
+            <h2>See you tomorrow, Sarah!</h2>
+            <p>Just a friendly reminder about your upcoming appointment:</p>
+            
+            <div class="appointment-box">
+                <div class="date">📅 December 30, 2025</div>
+                <div class="time">🕐 10:00 AM</div>
+                <div class="details">
+                    <strong>Service:</strong> Deep Clean<br>
+                    <strong>Technician:</strong> Marcus J.<br>
+                    <strong>Duration:</strong> 3-4 hours
+                </div>
+            </div>
+
+            <p>📍 <strong>Location:</strong> 123 Main Street, City, State 12345</p>
+
+            <div class="highlight-box">
+                <h3>📝 Quick Reminders</h3>
+                <ul>
+                    <li>Please ensure access to all areas needed</li>
+                    <li>Let us know if you have special instructions</li>
+                    <li>Our team will text when they're on the way</li>
+                </ul>
+            </div>
+
+            <p>Need to reschedule? No problem! Just click below:</p>
+            <a href="#" class="btn">Reschedule Appointment</a>
+            <a href="#" class="btn btn-secondary">Confirm Appointment ✓</a>
+
+            <div class="signature">
+                <p>See you soon!</p>
+                <p class="name">The Demo Business Team</p>
+            </div>
+        </div>
+        <div class="email-footer">
+            <p>Reply STOP to opt out of reminders</p>
+            <p>Demo Business • (555) 123-4567</p>
+        </div>
+    </div>
+
+    <!-- INVOICE EMAIL -->
+    <h2 class="section-title">💰 Invoice Email</h2>
+    <div class="email-label">Sent automatically after service is complete</div>
+    <div class="email-container">
+        <div class="email-header">
+            <div class="logo">⚓</div>
+            <div class="brand">Demo Business</div>
+        </div>
+        <div class="email-body">
+            <h2>Thanks for your business! 🙌</h2>
+            <p>Hi Sarah,</p>
+            <p>Great seeing you today! Here's your invoice for the service we just completed:</p>
+            
+            <div class="invoice-box">
+                <div class="amount">$275.00</div>
+                <div class="due">Due by January 6, 2026</div>
+                <table>
+                    <tr>
+                        <td>Deep Clean Service</td>
+                        <td>$275.00</td>
+                    </tr>
+                    <tr>
+                        <td>Date of Service</td>
+                        <td>Dec 30, 2025</td>
+                    </tr>
+                    <tr>
+                        <td>Technician</td>
+                        <td>Marcus J.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Due</strong></td>
+                        <td><strong>$275.00</strong></td>
+                    </tr>
+                </table>
+            </div>
+
+            <p style="text-align: center;">
+                <a href="#" class="btn">💳 Pay Now - Quick & Secure</a>
+            </p>
+
+            <p style="font-size: 13px; color: #888; text-align: center;">We accept all major credit cards, debit, and ACH transfers.</p>
+
+            <div class="signature">
+                <p>Thanks again!</p>
+                <p class="name">The Demo Business Team</p>
+            </div>
+        </div>
+        <div class="email-footer">
+            <p>Questions about your invoice? Just reply to this email!</p>
+            <p>Demo Business • (555) 123-4567</p>
+        </div>
+    </div>
+
+    <!-- REVIEW REQUEST -->
+    <h2 class="section-title">⭐ Review Request Email</h2>
+    <div class="email-label">Sent automatically 48 hours after service</div>
+    <div class="email-container">
+        <div class="email-header">
+            <div class="logo">⚓</div>
+            <div class="brand">Demo Business</div>
+        </div>
+        <div class="email-body">
+            <span class="thankyou-badge">💜 Thank You</span>
+            <h2>How did we do, Sarah?</h2>
+            <p>We hope you're loving your freshly cleaned space! ✨</p>
+            <p>Your feedback means the world to us. Would you take 30 seconds to leave us a quick review?</p>
+            
+            <div style="text-align: center; padding: 24px;">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p style="color: #888; font-size: 14px;">Click to rate your experience</p>
+            </div>
+
+            <p style="text-align: center;">
+                <a href="#" class="btn">Leave a Google Review 🌟</a>
+            </p>
+
+            <div class="highlight-box">
+                <h3>✏️ Not sure what to say?</h3>
+                <p style="font-size: 14px; margin: 0;">Here are some things other clients mention: punctuality, attention to detail, friendliness, quality of work, communication. But whatever comes to mind works great!</p>
+            </div>
+
+            <p>Thanks for being an awesome client. We appreciate you! 🙏</p>
+
+            <div class="signature">
+                <p>With gratitude,</p>
+                <p class="name">The Demo Business Team</p>
+            </div>
+        </div>
+        <div class="email-footer">
+            <p>Not satisfied? Please reply and let us know how we can make it right.</p>
+            <p>Demo Business • (555) 123-4567</p>
+        </div>
+    </div>
+
+    <!-- PAYMENT REMINDER -->
+    <h2 class="section-title">🔔 Payment Reminder Email</h2>
+    <div class="email-label">Sent automatically when invoice is due</div>
+    <div class="email-container">
+        <div class="email-header">
+            <div class="logo">⚓</div>
+            <div class="brand">Demo Business</div>
+        </div>
+        <div class="email-body">
+            <span class="reminder-badge">💰 Payment Reminder</span>
+            <h2>Friendly reminder about your invoice</h2>
+            <p>Hi Sarah,</p>
+            <p>Just a quick note that Invoice #1234 is due today. We know things get busy - here's an easy link to take care of it:</p>
+            
+            <div class="invoice-box">
+                <div class="amount">$275.00</div>
+                <div class="due">Due: January 6, 2026</div>
+            </div>
+
+            <p style="text-align: center;">
+                <a href="#" class="btn">💳 Pay Now</a>
+            </p>
+
+            <p>Already paid? You can ignore this email - sometimes payments take a day to process.</p>
+
+            <p>Questions or need to set up a payment plan? Just reply to this email and we'll work something out!</p>
+
+            <div class="signature">
+                <p>Thanks!</p>
+                <p class="name">The Demo Business Team</p>
+            </div>
+        </div>
+        <div class="email-footer">
+            <p>Demo Business • (555) 123-4567</p>
+        </div>
+    </div>
+
+    <!-- RE-ENGAGEMENT -->
+    <h2 class="section-title">💌 Re-engagement Email</h2>
+    <div class="email-label">Sent automatically after 60 days of inactivity</div>
+    <div class="email-container">
+        <div class="email-header">
+            <div class="logo">⚓</div>
+            <div class="brand">Demo Business</div>
+        </div>
+        <div class="email-body">
+            <h2>We miss you, Sarah! 😢</h2>
+            <p>It's been a while since we've seen you, and we wanted to check in.</p>
+            <p>Is everything okay? We'd love to have you back!</p>
+            
+            <div class="highlight-box">
+                <h3>🎁 Special Welcome Back Offer</h3>
+                <p style="font-size: 18px; margin: 0; font-weight: 700; color: #cc0000;">15% OFF your next service</p>
+                <p style="font-size: 14px; margin-top: 8px;">Use code: <strong>WELCOMEBACK</strong> when booking</p>
+            </div>
+
+            <p style="text-align: center;">
+                <a href="#" class="btn">Book Now & Save 15% →</a>
+            </p>
+
+            <p>If there's anything we could have done better last time, please let us know. Your feedback helps us improve!</p>
+
+            <div class="signature">
+                <p>Hope to see you soon,</p>
+                <p class="name">The Demo Business Team</p>
+            </div>
+        </div>
+        <div class="email-footer">
+            <p>Offer valid for 14 days</p>
+            <p><a href="#">Unsubscribe</a> from promotional emails</p>
+        </div>
+    </div>
+
+    <div class="copy-hint">
+        <h3>💡 These Are Just Previews!</h3>
+        <p>These emails are sent automatically by your Anchor AI systems. Clients receive them at exactly the right time - no manual work required. All you do is watch the 5-star reviews roll in! ⭐</p>
+    </div>
+
+</body>
+</html>

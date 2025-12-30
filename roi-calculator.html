@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anchor AI - ROI Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #003366;
+            --navy-light: #004080;
+            --red: #cc0000;
+            --red-light: #ff4444;
+            --dark: #0f172a;
+            --dark-card: #1e293b;
+            --dark-border: #334155;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --green: #22c55e;
+            --green-light: #4ade80;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* Demo Banner */
+        .demo-banner {
+            background: linear-gradient(135deg, var(--navy), var(--red));
+            color: white;
+            text-align: center;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .demo-banner a {
+            color: #ffd700;
+            text-decoration: underline;
+            margin-left: 10px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .header .logo {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--text), var(--green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Calculator Layout */
+        .calculator-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 800px) {
+            .calculator-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Card */
+        .card {
+            background: var(--dark-card);
+            border-radius: 16px;
+            border: 1px solid var(--dark-border);
+            padding: 32px;
+        }
+
+        .card h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Form Inputs */
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .input-group .hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper .prefix {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .input-wrapper .suffix {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 16px;
+            padding-left: 36px;
+            background: var(--dark);
+            border: 2px solid var(--dark-border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 18px;
+            font-weight: 600;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .input-wrapper.no-prefix input {
+            padding-left: 16px;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: var(--navy);
+            box-shadow: 0 0 0 4px rgba(0, 51, 102, 0.2);
+        }
+
+        /* Slider */
+        .slider-wrapper {
+            margin-top: 12px;
+        }
+
+        .slider-wrapper input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--dark-border);
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .slider-wrapper input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--navy), var(--navy-light));
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 51, 102, 0.4);
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Results Card */
+        .results-card {
+            background: linear-gradient(135deg, var(--dark-card), var(--dark));
+            position: sticky;
+            top: 20px;
+        }
+
+        .result-item {
+            padding: 20px;
+            background: var(--dark);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border: 1px solid var(--dark-border);
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-item .label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .result-item .value {
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .result-item .subtext {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .result-item.highlight {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.05));
+            border-color: var(--green);
+        }
+
+        .result-item.highlight .value {
+            color: var(--green);
+        }
+
+        .result-item.time .value {
+            color: #f59e0b;
+        }
+
+        .result-item.money .value {
+            color: var(--green);
+        }
+
+        .result-item.negative .value {
+            color: var(--red);
+        }
+
+        /* ROI Meter */
+        .roi-meter {
+            margin: 24px 0;
+            padding: 24px;
+            background: var(--dark);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .roi-meter .label {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .roi-meter .value {
+            font-size: 56px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--green), var(--green-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .roi-meter .subtext {
+            font-size: 14px;
+            color: var(--green);
+            margin-top: 8px;
+        }
+
+        /* CTA */
+        .cta-section {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--dark-border);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--red), var(--red-light));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(204, 0, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--dark-border);
+            color: var(--text);
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: var(--dark);
+            border-color: var(--navy);
+        }
+
+        /* Breakdown */
+        .breakdown {
+            margin-top: 32px;
+        }
+
+        .breakdown h3 {
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--dark-border);
+            font-size: 14px;
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-item .label {
+            color: var(--text-muted);
+        }
+
+        .breakdown-item .value {
+            font-weight: 600;
+        }
+
+        .breakdown-item .value.positive {
+            color: var(--green);
+        }
+
+        .breakdown-item .value.negative {
+            color: var(--red);
+        }
+
+        /* Animation */
+        .animate-value {
+            transition: all 0.3s ease;
+        }
+
+        /* Comparison */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .comparison-box {
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .comparison-box.before {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .comparison-box.after {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .comparison-box .title {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .comparison-box.before .value {
+            color: var(--red);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .comparison-box.after .value {
+            color: var(--green);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        /* Testimonial */
+        .testimonial {
+            background: var(--dark);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 32px;
+            border-left: 4px solid var(--navy);
+        }
+
+        .testimonial p {
+            font-style: italic;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .testimonial .author {
+            font-size: 13px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Banner -->
+    <div class="demo-banner">
+        ⚓ See exactly how much time and money you'll save with Anchor AI
+        <a href="https://calendly.com/brinkley-anchoraimanagement/30min" target="_blank">Book a Call →</a>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">⚓</div>
+            <h1>ROI Calculator</h1>
+            <p>Enter your numbers below to see exactly how much time and money you could save with automation</p>
+        </div>
+
+        <!-- Calculator -->
+        <div class="calculator-layout">
+            
+            <!-- Input Side -->
+            <div class="card">
+                <h2>📊 Your Current Numbers</h2>
+
+                <div class="input-group">
+                    <label>How many hours per week do you spend on admin tasks?</label>
+                    <div class="input-wrapper no-prefix">
+                        <input type="number" id="adminHours" value="15" min="0" max="80" onchange="calculate()" oninput="calculate()">
+                        <span class="suffix">hrs/week</span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" min="0" max="40" value="15" id="adminHoursSlider" oninput="syncSlider('adminHours', this.value)">
+                        <div class="slider-labels">
+                            <span>0 hrs</span>
+                            <span>40 hrs</span>
+                        </div>
+                    </div>
+                    <p class="hint">Scheduling, invoicing, reminders, follow-ups, etc.</p>
+                </div>
+
+                <div class="input-group">
+                    <label>What's your hourly rate / time value?</label>
+                    <div class="input-wrapper">
+                        <span class="prefix">$</span>
+                        <input type="number" id="hourlyRate" value="75" min="0" onchange="calculate()" oninput="calculate()">
+                        <span class="suffix">/hour</span>
+                    </div>
+                    <p class="hint">What you charge or what your time is worth</p>
+                </div>
+
+                <div class="input-group">
+                    <label>How many appointments per week?</label>
+                    <div class="input-wrapper no-prefix">
+                        <input type="number" id="appointments" value="25" min="0" onchange="calculate()" oninput="calculate()">
+                        <span class="suffix">per week</span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" min="0" max="100" value="25" id="appointmentsSlider" oninput="syncSlider('appointments', this.value)">
+                        <div class="slider-labels">
+                            <span>0</span>
+                            <span>100</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Current no-show rate?</label>
+                    <div class="input-wrapper no-prefix">
+                        <input type="number" id="noShowRate" value="12" min="0" max="100" onchange="calculate()" oninput="calculate()">
+                        <span class="suffix">%</span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" min="0" max="30" value="12" id="noShowRateSlider" oninput="syncSlider('noShowRate', this.value)">
+                        <div class="slider-labels">
+                            <span>0%</span>
+                            <span>30%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Average revenue per appointment?</label>
+                    <div class="input-wrapper">
+                        <span class="prefix">$</span>
+                        <input type="number" id="avgRevenue" value="150" min="0" onchange="calculate()" oninput="calculate()">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Days to get paid (on average)?</label>
+                    <div class="input-wrapper no-prefix">
+                        <input type="number" id="daysToPayment" value="14" min="0" onchange="calculate()" oninput="calculate()">
+                        <span class="suffix">days</span>
+                    </div>
+                </div>
+
+                <div class="testimonial">
+                    <p>"I was spending 20+ hours a week on admin. Now it's maybe 2 hours. The ROI was obvious within the first month."</p>
+                    <div class="author">— Sarah M., Service Business Owner</div>
+                </div>
+            </div>
+
+            <!-- Results Side -->
+            <div class="card results-card">
+                <h2>💰 Your Potential Savings</h2>
+
+                <div class="roi-meter">
+                    <div class="label">ANNUAL ROI</div>
+                    <div class="value animate-value" id="roiPercent">847%</div>
+                    <div class="subtext">Return on investment</div>
+                </div>
+
+                <div class="result-item time">
+                    <div class="label">⏱️ Time Saved Per Week</div>
+                    <div class="value animate-value" id="timeSaved">12 hours</div>
+                    <div class="subtext" id="timeSavedYear">624 hours per year</div>
+                </div>
+
+                <div class="result-item money">
+                    <div class="label">💵 Value of Time Saved (Monthly)</div>
+                    <div class="value animate-value" id="moneySaved">$3,900</div>
+                    <div class="subtext" id="moneySavedYear">$46,800 per year</div>
+                </div>
+
+                <div class="result-item highlight">
+                    <div class="label">📈 Revenue Recovered from No-Shows</div>
+                    <div class="value animate-value" id="noShowSavings">$1,350/mo</div>
+                    <div class="subtext">Automated reminders reduce no-shows by 70%</div>
+                </div>
+
+                <div class="comparison">
+                    <div class="comparison-box before">
+                        <div class="title">CURRENT PAYMENT TIME</div>
+                        <div class="value" id="currentPayDays">14 days</div>
+                    </div>
+                    <div class="comparison-box after">
+                        <div class="title">WITH AUTOMATION</div>
+                        <div class="value" id="newPayDays">3 days</div>
+                    </div>
+                </div>
+
+                <div class="breakdown">
+                    <h3>📋 Monthly Breakdown</h3>
+                    <div class="breakdown-item">
+                        <span class="label">Time savings value</span>
+                        <span class="value positive" id="breakdownTime">+$3,900</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="label">Recovered revenue (no-shows)</span>
+                        <span class="value positive" id="breakdownNoShow">+$1,350</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="label">Faster payments benefit</span>
+                        <span class="value positive" id="breakdownPayments">+$200</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="label">Anchor AI Investment</span>
+                        <span class="value negative">-$1,500</span>
+                    </div>
+                    <div class="breakdown-item" style="border-top: 2px solid var(--green); padding-top: 16px; margin-top: 8px;">
+                        <span class="label" style="font-weight: 600; color: var(--text);">NET MONTHLY BENEFIT</span>
+                        <span class="value positive" id="netBenefit" style="font-size: 20px;">+$3,950</span>
+                    </div>
+                </div>
+
+                <div class="cta-section">
+                    <a href="https://calendly.com/brinkley-anchoraimanagement/30min" target="_blank" class="btn btn-primary">
+                        Book Your Free Strategy Call →
+                    </a>
+                    <button class="btn btn-secondary" onclick="window.print()">
+                        📄 Download This Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function syncSlider(inputId, value) {
+            document.getElementById(inputId).value = value;
+            calculate();
+        }
+
+        function calculate() {
+            // Get input values
+            const adminHours = parseFloat(document.getElementById('adminHours').value) || 0;
+            const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
+            const appointments = parseFloat(document.getElementById('appointments').value) || 0;
+            const noShowRate = parseFloat(document.getElementById('noShowRate').value) || 0;
+            const avgRevenue = parseFloat(document.getElementById('avgRevenue').value) || 0;
+            const daysToPayment = parseFloat(document.getElementById('daysToPayment').value) || 0;
+
+            // Sync sliders
+            document.getElementById('adminHoursSlider').value = adminHours;
+            document.getElementById('appointmentsSlider').value = appointments;
+            document.getElementById('noShowRateSlider').value = noShowRate;
+
+            // Calculate savings
+            const automationEfficiency = 0.8; // 80% of admin tasks automated
+            const hoursPerWeekSaved = adminHours * automationEfficiency;
+            const hoursPerYearSaved = hoursPerWeekSaved * 52;
+
+            const monthlyTimeSavings = hoursPerWeekSaved * 4.33 * hourlyRate;
+            const yearlyTimeSavings = monthlyTimeSavings * 12;
+
+            // No-show reduction (70% reduction with reminders)
+            const currentNoShows = appointments * (noShowRate / 100);
+            const reducedNoShows = currentNoShows * 0.3; // 70% reduction
+            const savedAppointments = currentNoShows - reducedNoShows;
+            const monthlyNoShowSavings = savedAppointments * 4.33 * avgRevenue;
+
+            // Faster payments benefit (assume 2% value of faster cash flow)
+            const monthlyRevenue = appointments * 4.33 * avgRevenue;
+            const paymentBenefit = monthlyRevenue * 0.02 * ((daysToPayment - 3) / 30);
+
+            // Total monthly benefit
+            const anchorInvestment = 1500;
+            const totalMonthlyBenefit = monthlyTimeSavings + monthlyNoShowSavings + paymentBenefit;
+            const netBenefit = totalMonthlyBenefit - anchorInvestment;
+
+            // ROI
+            const annualBenefit = totalMonthlyBenefit * 12;
+            const annualInvestment = anchorInvestment * 12;
+            const roi = ((annualBenefit - annualInvestment) / annualInvestment) * 100;
+
+            // Update display
+            document.getElementById('timeSaved').textContent = Math.round(hoursPerWeekSaved) + ' hours';
+            document.getElementById('timeSavedYear').textContent = Math.round(hoursPerYearSaved) + ' hours per year';
+
+            document.getElementById('moneySaved').textContent = '$' + Math.round(monthlyTimeSavings).toLocaleString();
+            document.getElementById('moneySavedYear').textContent = '$' + Math.round(yearlyTimeSavings).toLocaleString() + ' per year';
+
+            document.getElementById('noShowSavings').textContent = '$' + Math.round(monthlyNoShowSavings).toLocaleString() + '/mo';
+
+            document.getElementById('currentPayDays').textContent = daysToPayment + ' days';
+            document.getElementById('newPayDays').textContent = '3 days';
+
+            document.getElementById('breakdownTime').textContent = '+$' + Math.round(monthlyTimeSavings).toLocaleString();
+            document.getElementById('breakdownNoShow').textContent = '+$' + Math.round(monthlyNoShowSavings).toLocaleString();
+            document.getElementById('breakdownPayments').textContent = '+$' + Math.round(paymentBenefit).toLocaleString();
+            document.getElementById('netBenefit').textContent = '+$' + Math.round(netBenefit).toLocaleString();
+
+            document.getElementById('roiPercent').textContent = Math.round(roi) + '%';
+        }
+
+        // Initial calculation
+        calculate();
+    </script>
+</body>
+</html>
