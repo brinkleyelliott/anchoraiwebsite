@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Marketing Demo - Anchor AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+        
+        .demo-banner {
+            background: linear-gradient(135deg, #003366, #cc0000);
+            color: white;
+            text-align: center;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .demo-banner a { color: #ffd700; margin-left: 10px; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #94a3b8;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Campaign Builder */
+        .campaign-builder {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .builder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .builder-header h2 {
+            font-size: 1.2rem;
+        }
+
+        .template-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .template-tab {
+            background: #0f172a;
+            border: 2px solid #334155;
+            color: #94a3b8;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .template-tab:hover {
+            border-color: #003366;
+            color: #e2e8f0;
+        }
+
+        .template-tab.active {
+            border-color: #003366;
+            background: #003366;
+            color: white;
+        }
+
+        .message-composer {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .message-composer label {
+            display: block;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+
+        .message-composer textarea {
+            width: 100%;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #e2e8f0;
+            padding: 14px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: none;
+            height: 120px;
+            outline: none;
+        }
+
+        .message-composer textarea:focus {
+            border-color: #003366;
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 6px;
+        }
+
+        .variable-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .variable-tag {
+            background: #334155;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .variable-tag:hover {
+            background: #003366;
+        }
+
+        /* Audience Selector */
+        .audience-section {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .audience-section h3 {
+            font-size: 14px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .audience-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .audience-option {
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .audience-option:hover {
+            border-color: #475569;
+        }
+
+        .audience-option.selected {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .audience-option .count {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #22c55e;
+        }
+
+        .audience-option .label {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        /* Schedule */
+        .schedule-section {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .schedule-options {
+            display: flex;
+            gap: 12px;
+        }
+
+        .schedule-btn {
+            flex: 1;
+            background: #1e293b;
+            border: 2px solid #334155;
+            color: #e2e8f0;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .schedule-btn:hover {
+            border-color: #475569;
+        }
+
+        .schedule-btn.active {
+            border-color: #003366;
+            background: #003366;
+        }
+
+        /* Send Button */
+        .send-campaign-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border: none;
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .send-campaign-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
+        }
+
+        /* Phone Preview */
+        .phone-preview {
+            position: sticky;
+            top: 20px;
+        }
+
+        .phone-frame {
+            background: #1a1a1a;
+            border-radius: 40px;
+            padding: 12px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
+
+        .phone-frame::before {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 25px;
+            background: #000;
+            border-radius: 20px;
+            margin: 0 auto 10px;
+        }
+
+        .phone-screen {
+            background: #f5f5f5;
+            border-radius: 30px;
+            height: 500px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .phone-header {
+            background: #003366;
+            color: white;
+            padding: 40px 16px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .phone-header .avatar {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .phone-header .biz-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .phone-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .sms-message {
+            background: #22c55e;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 18px 18px 18px 4px;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            max-width: 90%;
+        }
+
+        .sms-time {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .preview-label {
+            text-align: center;
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 16px;
+        }
+
+        /* Stats Preview */
+        .stats-preview {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #22c55e;
+        }
+
+        .stat-item .label {
+            font-size: 10px;
+            color: #64748b;
+        }
+
+        /* Automation Cards */
+        .automation-section {
+            margin-top: 30px;
+        }
+
+        .automation-section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+        }
+
+        .automation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .automation-card {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #334155;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .automation-card:hover {
+            border-color: #003366;
+            transform: translateY(-4px);
+        }
+
+        .automation-card.active {
+            border-color: #22c55e;
+        }
+
+        .automation-card .icon {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .automation-card h4 {
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .automation-card p {
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        .automation-card .status {
+            margin-top: 12px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .automation-card .status.on {
+            color: #22c55e;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-banner">
+        📱 DEMO: Automated SMS Marketing That Actually Works
+        <a href="https://calendly.com/brinkley-anchoraimanagement/30min" target="_blank">Get This For Your Business →</a>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>📱 SMS Marketing Hub</h1>
+            <p>Create campaigns, automate follow-ups, and watch your bookings grow</p>
+        </div>
+
+        <div class="demo-grid">
+            <div class="campaign-builder">
+                <div class="builder-header">
+                    <h2>✍️ Create Campaign</h2>
+                </div>
+
+                <div class="template-tabs">
+                    <button class="template-tab active" onclick="loadTemplate('promo')">🎉 Promo</button>
+                    <button class="template-tab" onclick="loadTemplate('reminder')">⏰ Reminder</button>
+                    <button class="template-tab" onclick="loadTemplate('followup')">💬 Follow-up</button>
+                    <button class="template-tab" onclick="loadTemplate('birthday')">🎂 Birthday</button>
+                    <button class="template-tab" onclick="loadTemplate('reactivation')">👋 Win-back</button>
+                </div>
+
+                <div class="message-composer">
+                    <label>Your Message</label>
+                    <textarea id="messageText" oninput="updatePreview()">Hey {first_name}! 🎉 
+
+This week only: 20% off any service! 
+
+Book now before spots fill up 👉 {booking_link}
+
+Reply STOP to unsubscribe</textarea>
+                    <div class="char-count"><span id="charCount">147</span>/160 characters</div>
+                    <div class="variable-tags">
+                        <span class="variable-tag" onclick="insertVariable('{first_name}')">{first_name}</span>
+                        <span class="variable-tag" onclick="insertVariable('{booking_link}')">{booking_link}</span>
+                        <span class="variable-tag" onclick="insertVariable('{business_name}')">{business_name}</span>
+                        <span class="variable-tag" onclick="insertVariable('{offer_code}')">{offer_code}</span>
+                    </div>
+                </div>
+
+                <div class="audience-section">
+                    <h3>👥 Select Audience</h3>
+                    <div class="audience-options">
+                        <div class="audience-option selected" onclick="selectAudience(this, 847)">
+                            <div class="count">847</div>
+                            <div class="label">All Customers</div>
+                        </div>
+                        <div class="audience-option" onclick="selectAudience(this, 234)">
+                            <div class="count">234</div>
+                            <div class="label">VIP Members</div>
+                        </div>
+                        <div class="audience-option" onclick="selectAudience(this, 156)">
+                            <div class="count">156</div>
+                            <div class="label">New This Month</div>
+                        </div>
+                        <div class="audience-option" onclick="selectAudience(this, 89)">
+                            <div class="count">89</div>
+                            <div class="label">Haven't Visited (30+ days)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="schedule-section">
+                    <h3 style="font-size: 14px; margin-bottom: 16px;">🗓️ When to Send</h3>
+                    <div class="schedule-options">
+                        <button class="schedule-btn active">Send Now</button>
+                        <button class="schedule-btn">Schedule</button>
+                        <button class="schedule-btn">Best Time (AI)</button>
+                    </div>
+                </div>
+
+                <button class="send-campaign-btn" onclick="sendCampaign()">
+                    🚀 Send to 847 Customers
+                </button>
+
+                <!-- Automations -->
+                <div class="automation-section">
+                    <h2>⚡ Active Automations</h2>
+                    <div class="automation-grid">
+                        <div class="automation-card active">
+                            <div class="icon">⏰</div>
+                            <h4>Appointment Reminder</h4>
+                            <p>24 hours before every appointment</p>
+                            <div class="status on"><span class="status-dot"></span> Active • 142 sent this week</div>
+                        </div>
+                        <div class="automation-card active">
+                            <div class="icon">🙏</div>
+                            <h4>Thank You + Review</h4>
+                            <p>2 hours after service completed</p>
+                            <div class="status on"><span class="status-dot"></span> Active • 89 sent this week</div>
+                        </div>
+                        <div class="automation-card active">
+                            <div class="icon">🎂</div>
+                            <h4>Birthday Special</h4>
+                            <p>Auto-sends birthday discount</p>
+                            <div class="status on"><span class="status-dot"></span> Active • 12 sent this month</div>
+                        </div>
+                        <div class="automation-card">
+                            <div class="icon">👋</div>
+                            <h4>Win-Back Campaign</h4>
+                            <p>No visit in 60+ days</p>
+                            <div class="status" style="color: #64748b;">Click to activate</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phone Preview -->
+            <div class="phone-preview">
+                <div class="phone-frame">
+                    <div class="phone-screen">
+                        <div class="phone-header">
+                            <div class="avatar">⚓</div>
+                            <div class="biz-name">Your Business</div>
+                        </div>
+                        <div class="phone-messages">
+                            <div class="sms-message" id="previewMessage">
+                                Hey Sarah! 🎉<br><br>
+                                This week only: 20% off any service!<br><br>
+                                Book now before spots fill up 👉 book.yourbiz.com<br><br>
+                                Reply STOP to unsubscribe
+                            </div>
+                            <div class="sms-time">Delivered • Just now</div>
+                        </div>
+                    </div>
+                </div>
+                <p class="preview-label">📱 Live Preview</p>
+
+                <div class="stats-preview">
+                    <div class="stat-item">
+                        <div class="value">98%</div>
+                        <div class="label">Open Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="value">34%</div>
+                        <div class="label">Click Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="value">$4,200</div>
+                        <div class="label">Revenue</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const templates = {
+            promo: `Hey {first_name}! 🎉 
+
+This week only: 20% off any service! 
+
+Book now before spots fill up 👉 {booking_link}
+
+Reply STOP to unsubscribe`,
+            reminder: `Hi {first_name}! ⏰
+
+Just a reminder - you're booked for tomorrow at 2pm!
+
+Need to reschedule? Reply to this text or call us.
+
+See you soon! 
+- {business_name}`,
+            followup: `Hey {first_name}! 💬
+
+Thanks for coming in today! We hope you loved your experience.
+
+Got a minute to leave us a review? It really helps! ⭐
+{review_link}
+
+Thanks so much!`,
+            birthday: `🎂 HAPPY BIRTHDAY {first_name}! 🎉
+
+Your special day deserves a special treat - enjoy 25% OFF your next visit!
+
+Use code: BDAY25
+Book here 👉 {booking_link}
+
+Valid this month only!`,
+            reactivation: `Hey {first_name}! 👋
+
+We miss you! It's been a while since your last visit.
+
+Come back this week and get 15% off - just for you! 💕
+
+Book now 👉 {booking_link}
+
+Hope to see you soon!`
+        };
+
+        function loadTemplate(type) {
+            document.querySelectorAll('.template-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('messageText').value = templates[type];
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const text = document.getElementById('messageText').value;
+            const preview = text
+                .replace('{first_name}', 'Sarah')
+                .replace('{business_name}', 'Your Business')
+                .replace('{booking_link}', 'book.yourbiz.com')
+                .replace('{review_link}', 'review.yourbiz.com')
+                .replace('{offer_code}', 'SAVE20')
+                .replace(/\n/g, '<br>');
+            
+            document.getElementById('previewMessage').innerHTML = preview;
+            document.getElementById('charCount').textContent = text.length;
+        }
+
+        function insertVariable(variable) {
+            const textarea = document.getElementById('messageText');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            textarea.value = text.substring(0, start) + variable + text.substring(end);
+            textarea.focus();
+            updatePreview();
+        }
+
+        function selectAudience(el, count) {
+            document.querySelectorAll('.audience-option').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+            document.querySelector('.send-campaign-btn').innerHTML = `🚀 Send to ${count} Customers`;
+        }
+
+        function sendCampaign() {
+            const btn = document.querySelector('.send-campaign-btn');
+            btn.innerHTML = '✅ Campaign Sent!';
+            btn.style.background = '#003366';
+            setTimeout(() => {
+                btn.innerHTML = '🚀 Send to 847 Customers';
+                btn.style.background = '';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

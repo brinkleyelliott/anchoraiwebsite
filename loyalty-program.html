@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loyalty Program Demo - Anchor AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        
+        .demo-banner {
+            background: linear-gradient(135deg, #003366, #cc0000);
+            color: white;
+            text-align: center;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        .demo-banner a { color: #ffd700; margin-left: 10px; }
+
+        .phone-frame {
+            margin-top: 70px;
+            background: #1a1a1a;
+            border-radius: 50px;
+            padding: 14px;
+            width: 340px;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.5);
+        }
+
+        .phone-frame::before {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 30px;
+            background: #000;
+            border-radius: 20px;
+            margin: 0 auto 12px;
+        }
+
+        .phone-screen {
+            background: linear-gradient(180deg, #003366 0%, #001a33 100%);
+            border-radius: 40px;
+            min-height: 680px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Header */
+        .app-header {
+            padding: 40px 20px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .business-logo {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 12px;
+        }
+
+        .business-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .member-status {
+            font-size: 13px;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .member-badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #000;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        /* Points Card */
+        .points-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+            backdrop-filter: blur(10px);
+            margin: 0 16px;
+            border-radius: 20px;
+            padding: 24px;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .points-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .points-label {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .points-value {
+            font-size: 48px;
+            font-weight: 800;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .points-value small {
+            font-size: 16px;
+            font-weight: 500;
+            opacity: 0.7;
+        }
+
+        .points-progress {
+            margin-bottom: 12px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e, #4ade80);
+            border-radius: 10px;
+            width: 75%;
+            transition: width 0.5s;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            margin-top: 6px;
+            opacity: 0.7;
+        }
+
+        .next-reward {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .next-reward .icon {
+            font-size: 24px;
+        }
+
+        /* Content Area */
+        .content-area {
+            background: #f8fafc;
+            border-radius: 24px 24px 0 0;
+            margin-top: 20px;
+            padding: 20px 16px;
+            min-height: 350px;
+            color: #1e293b;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            flex: 1;
+            background: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #64748b;
+        }
+
+        .tab.active {
+            background: #003366;
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: #e2e8f0;
+        }
+
+        /* Rewards Grid */
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .reward-card {
+            background: white;
+            border-radius: 14px;
+            padding: 14px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .reward-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+
+        .reward-card.locked {
+            opacity: 0.5;
+        }
+
+        .reward-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .reward-name {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 4px;
+            color: #1e293b;
+        }
+
+        .reward-points {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        .reward-points.available {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        /* History List */
+        .history-list {
+            display: none;
+        }
+
+        .history-list.active {
+            display: block;
+        }
+
+        .history-item {
+            background: white;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+
+        .history-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .history-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #1e293b;
+        }
+
+        .history-date {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        .history-points {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .history-points.earned { color: #22c55e; }
+        .history-points.redeemed { color: #ef4444; }
+
+        /* Redeem Button */
+        .redeem-btn {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Info Text */
+        .info-text {
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+            font-size: 13px;
+            opacity: 0.8;
+            padding: 0 20px;
+        }
+
+        .cta-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .cta-btn {
+            background: linear-gradient(135deg, #cc0000, #a30000);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(204, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-banner">
+        🎁 DEMO: Customer Loyalty Program - Keep them coming back!
+        <a href="https://calendly.com/brinkley-anchoraimanagement/30min" target="_blank">Get This For Your Business →</a>
+    </div>
+
+    <div class="phone-frame">
+        <div class="phone-screen">
+            <div class="app-header">
+                <div class="business-logo">⚓</div>
+                <div class="business-name">Your Business Rewards</div>
+                <div class="member-status">
+                    Welcome back, Sarah! 
+                    <span class="member-badge">⭐ GOLD</span>
+                </div>
+            </div>
+
+            <div class="points-card">
+                <div class="points-header">
+                    <div>
+                        <div class="points-label">Your Points</div>
+                        <div class="points-value">750 <small>pts</small></div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="points-label">Lifetime</div>
+                        <div style="font-size: 18px; font-weight: 600;">2,450</div>
+                    </div>
+                </div>
+                
+                <div class="points-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span>750 pts</span>
+                        <span>1,000 pts</span>
+                    </div>
+                </div>
+
+                <div class="next-reward">
+                    <span class="icon">🎉</span>
+                    <div>
+                        <strong>250 more points</strong> until your next free reward!
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('rewards')">🎁 Rewards</button>
+                    <button class="tab" onclick="showTab('history')">📋 History</button>
+                </div>
+
+                <div class="rewards-grid" id="rewardsTab">
+                    <div class="reward-card" onclick="redeemReward(this)">
+                        <div class="reward-icon">☕</div>
+                        <div class="reward-name">Free Drink</div>
+                        <div class="reward-points available">✓ 500 pts - Available!</div>
+                    </div>
+                    <div class="reward-card" onclick="redeemReward(this)">
+                        <div class="reward-icon">🎫</div>
+                        <div class="reward-name">$10 Off</div>
+                        <div class="reward-points available">✓ 750 pts - Available!</div>
+                    </div>
+                    <div class="reward-card locked">
+                        <div class="reward-icon">🧴</div>
+                        <div class="reward-name">Free Product</div>
+                        <div class="reward-points">🔒 1,000 pts</div>
+                    </div>
+                    <div class="reward-card locked">
+                        <div class="reward-icon">💆</div>
+                        <div class="reward-name">Free Service</div>
+                        <div class="reward-points">🔒 1,500 pts</div>
+                    </div>
+                    <div class="reward-card locked">
+                        <div class="reward-icon">🏆</div>
+                        <div class="reward-name">VIP Experience</div>
+                        <div class="reward-points">🔒 2,500 pts</div>
+                    </div>
+                    <div class="reward-card locked">
+                        <div class="reward-icon">👑</div>
+                        <div class="reward-name">Premium Package</div>
+                        <div class="reward-points">🔒 5,000 pts</div>
+                    </div>
+                </div>
+
+                <div class="history-list" id="historyTab">
+                    <div class="history-item">
+                        <div class="history-info">
+                            <div class="history-icon">🛒</div>
+                            <div>
+                                <div class="history-title">Purchase - Haircut</div>
+                                <div class="history-date">Dec 28, 2024</div>
+                            </div>
+                        </div>
+                        <div class="history-points earned">+150 pts</div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-info">
+                            <div class="history-icon">⭐</div>
+                            <div>
+                                <div class="history-title">Left a Review</div>
+                                <div class="history-date">Dec 28, 2024</div>
+                            </div>
+                        </div>
+                        <div class="history-points earned">+50 pts</div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-info">
+                            <div class="history-icon">🎁</div>
+                            <div>
+                                <div class="history-title">Redeemed - Free Drink</div>
+                                <div class="history-date">Dec 20, 2024</div>
+                            </div>
+                        </div>
+                        <div class="history-points redeemed">-500 pts</div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-info">
+                            <div class="history-icon">👥</div>
+                            <div>
+                                <div class="history-title">Referred a Friend</div>
+                                <div class="history-date">Dec 15, 2024</div>
+                            </div>
+                        </div>
+                        <div class="history-points earned">+200 pts</div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-info">
+                            <div class="history-icon">🛒</div>
+                            <div>
+                                <div class="history-title">Purchase - Color</div>
+                                <div class="history-date">Dec 10, 2024</div>
+                            </div>
+                        </div>
+                        <div class="history-points earned">+250 pts</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="info-text">
+        This is how YOUR customers could track their rewards. <br>
+        Branded to your business. Automatic point tracking. Zero effort.
+    </p>
+
+    <div class="cta-section">
+        <a href="https://calendly.com/brinkley-anchoraimanagement/30min" target="_blank">
+            <button class="cta-btn">Get a Loyalty Program →</button>
+        </a>
+    </div>
+
+    <script>
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`[onclick="showTab('${tab}')"]`).classList.add('active');
+            
+            if (tab === 'rewards') {
+                document.getElementById('rewardsTab').style.display = 'grid';
+                document.getElementById('historyTab').classList.remove('active');
+            } else {
+                document.getElementById('rewardsTab').style.display = 'none';
+                document.getElementById('historyTab').classList.add('active');
+            }
+        }
+
+        function redeemReward(card) {
+            if (!card.classList.contains('locked')) {
+                card.innerHTML = `
+                    <div class="reward-icon">✅</div>
+                    <div class="reward-name">Redeemed!</div>
+                    <div class="reward-points">Show this to staff</div>
+                `;
+                card.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+                card.style.color = 'white';
+            }
+        }
+    </script>
+</body>
+</html>

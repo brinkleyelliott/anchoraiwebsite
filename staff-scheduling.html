@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Scheduling Demo - Anchor AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+        
+        .demo-banner {
+            background: linear-gradient(135deg, #003366, #cc0000);
+            color: white;
+            text-align: center;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .demo-banner a { color: #ffd700; margin-left: 10px; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-btn {
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-btn:hover { background: #334155; }
+        .header-btn.primary { background: #003366; border-color: #003366; }
+        .header-btn.primary:hover { background: #004080; }
+
+        /* Week Navigation */
+        .week-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: #1e293b;
+            padding: 12px 20px;
+            border-radius: 12px;
+        }
+
+        .week-nav button {
+            background: #334155;
+            border: none;
+            color: #e2e8f0;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .week-nav button:hover { background: #475569; }
+
+        .week-nav .current-week {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Schedule Grid */
+        .schedule-container {
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 140px repeat(7, 1fr);
+            min-width: 900px;
+        }
+
+        .schedule-header {
+            background: #0f172a;
+            padding: 16px 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 13px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .schedule-header.today {
+            background: rgba(0, 51, 102, 0.3);
+            color: #60a5fa;
+        }
+
+        .schedule-header small {
+            display: block;
+            font-weight: 400;
+            color: #64748b;
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .staff-row {
+            display: contents;
+        }
+
+        .staff-cell {
+            padding: 12px;
+            border-bottom: 1px solid #334155;
+            border-right: 1px solid #334155;
+            min-height: 80px;
+        }
+
+        .staff-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: #0f172a;
+            border-bottom: 1px solid #334155;
+        }
+
+        .staff-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .staff-name {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .staff-role {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        /* Shift Blocks */
+        .shift-block {
+            background: linear-gradient(135deg, #003366, #004080);
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .shift-block:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 51, 102, 0.4);
+        }
+
+        .shift-block.morning { background: linear-gradient(135deg, #0891b2, #06b6d4); }
+        .shift-block.afternoon { background: linear-gradient(135deg, #003366, #004080); }
+        .shift-block.evening { background: linear-gradient(135deg, #6d28d9, #7c3aed); }
+        .shift-block.off { background: #334155; opacity: 0.5; }
+
+        .shift-time {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .shift-hours {
+            opacity: 0.8;
+        }
+
+        .add-shift {
+            border: 2px dashed #334155;
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            color: #64748b;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-shift:hover {
+            border-color: #003366;
+            color: #e2e8f0;
+        }
+
+        /* Scroll container */
+        .scroll-container {
+            overflow-x: auto;
+        }
+
+        /* Notifications Panel */
+        .notifications {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .notifications h3 {
+            font-size: 1rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #0f172a;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid #fbbf24;
+        }
+
+        .notification-item.approved { border-left-color: #22c55e; }
+        .notification-item.pending { border-left-color: #fbbf24; }
+
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(251, 191, 36, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-item.approved .notification-icon { background: rgba(34, 197, 94, 0.2); }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .notification-desc {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .notif-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .notif-btn.approve { background: #22c55e; color: white; }
+        .notif-btn.approve:hover { background: #16a34a; }
+        .notif-btn.deny { background: #334155; color: #e2e8f0; }
+        .notif-btn.deny:hover { background: #475569; }
+
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #22c55e;
+        }
+
+        .stat-card .value.warning { color: #fbbf24; }
+        .stat-card .value.blue { color: #3b82f6; }
+
+        .stat-card .label {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .header { flex-direction: column; align-items: flex-start; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-banner">
+        📅 DEMO: Smart Staff Scheduling - Build schedules in minutes, not hours
+        <a href="https://calendly.com/brinkley-anchoraimanagement/30min" target="_blank">Get This For Your Business →</a>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>📅 Staff Schedule</h1>
+            <div class="header-actions">
+                <button class="header-btn">📤 Export</button>
+                <button class="header-btn">📱 Notify Staff</button>
+                <button class="header-btn primary">+ Add Shift</button>
+            </div>
+        </div>
+
+        <div class="week-nav">
+            <button onclick="prevWeek()">← Previous</button>
+            <span class="current-week">Dec 30 - Jan 5, 2025</span>
+            <button onclick="nextWeek()">Next →</button>
+        </div>
+
+        <div class="schedule-container">
+            <div class="scroll-container">
+                <div class="schedule-grid">
+                    <!-- Header Row -->
+                    <div class="schedule-header">Team</div>
+                    <div class="schedule-header today">Mon<small>Dec 30</small></div>
+                    <div class="schedule-header">Tue<small>Dec 31</small></div>
+                    <div class="schedule-header">Wed<small>Jan 1</small></div>
+                    <div class="schedule-header">Thu<small>Jan 2</small></div>
+                    <div class="schedule-header">Fri<small>Jan 3</small></div>
+                    <div class="schedule-header">Sat<small>Jan 4</small></div>
+                    <div class="schedule-header">Sun<small>Jan 5</small></div>
+
+                    <!-- Sarah -->
+                    <div class="staff-info">
+                        <div class="staff-avatar" style="background: linear-gradient(135deg, #ec4899, #f472b6);">SM</div>
+                        <div>
+                            <div class="staff-name">Sarah M.</div>
+                            <div class="staff-role">Manager</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block morning">
+                            <div class="shift-time">8am - 4pm</div>
+                            <div class="shift-hours">8 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block morning">
+                            <div class="shift-time">8am - 4pm</div>
+                            <div class="shift-hours">8 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block off">
+                            <div class="shift-time">Holiday 🎉</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block morning">
+                            <div class="shift-time">8am - 4pm</div>
+                            <div class="shift-hours">8 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block morning">
+                            <div class="shift-time">8am - 4pm</div>
+                            <div class="shift-hours">8 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block afternoon">
+                            <div class="shift-time">10am - 6pm</div>
+                            <div class="shift-hours">8 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block off">
+                            <div class="shift-time">OFF</div>
+                        </div>
+                    </div>
+
+                    <!-- Mike -->
+                    <div class="staff-info">
+                        <div class="staff-avatar" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);">MT</div>
+                        <div>
+                            <div class="staff-name">Mike T.</div>
+                            <div class="staff-role">Technician</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block afternoon">
+                            <div class="shift-time">12pm - 8pm</div>
+                            <div class="shift-hours">8 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block afternoon">
+                            <div class="shift-time">12pm - 8pm</div>
+                            <div class="shift-hours">8 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block off">
+                            <div class="shift-time">Holiday 🎉</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block off">
+                            <div class="shift-time">OFF</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block afternoon">
+                            <div class="shift-time">12pm - 8pm</div>
+                            <div class="shift-hours">8 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block evening">
+                            <div class="shift-time">2pm - 10pm</div>
+                            <div class="shift-hours">8 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block evening">
+                            <div class="shift-time">2pm - 10pm</div>
+                            <div class="shift-hours">8 hrs</div>
+                        </div>
+                    </div>
+
+                    <!-- Jessica -->
+                    <div class="staff-info">
+                        <div class="staff-avatar" style="background: linear-gradient(135deg, #22c55e, #4ade80);">JL</div>
+                        <div>
+                            <div class="staff-name">Jessica L.</div>
+                            <div class="staff-role">Stylist</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block morning">
+                            <div class="shift-time">9am - 5pm</div>
+                            <div class="shift-hours">8 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block off">
+                            <div class="shift-time">OFF</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block off">
+                            <div class="shift-time">Holiday 🎉</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block morning">
+                            <div class="shift-time">9am - 5pm</div>
+                            <div class="shift-hours">8 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block morning">
+                            <div class="shift-time">9am - 5pm</div>
+                            <div class="shift-hours">8 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block morning">
+                            <div class="shift-time">9am - 5pm</div>
+                            <div class="shift-hours">8 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block off">
+                            <div class="shift-time">OFF</div>
+                        </div>
+                    </div>
+
+                    <!-- David -->
+                    <div class="staff-info">
+                        <div class="staff-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">DK</div>
+                        <div>
+                            <div class="staff-name">David K.</div>
+                            <div class="staff-role">Assistant</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block evening">
+                            <div class="shift-time">4pm - 10pm</div>
+                            <div class="shift-hours">6 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block evening">
+                            <div class="shift-time">4pm - 10pm</div>
+                            <div class="shift-hours">6 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block off">
+                            <div class="shift-time">Holiday 🎉</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block evening">
+                            <div class="shift-time">4pm - 10pm</div>
+                            <div class="shift-hours">6 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block evening">
+                            <div class="shift-time">4pm - 10pm</div>
+                            <div class="shift-hours">6 hrs</div>
+                        </div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="add-shift">+ Add Shift</div>
+                    </div>
+                    <div class="staff-cell">
+                        <div class="shift-block afternoon">
+                            <div class="shift-time">12pm - 6pm</div>
+                            <div class="shift-hours">6 hrs</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="notifications">
+            <h3>🔔 Requests & Notifications</h3>
+            
+            <div class="notification-item pending">
+                <div class="notification-icon">🔄</div>
+                <div class="notification-content">
+                    <div class="notification-title">Shift Swap Request</div>
+                    <div class="notification-desc">Mike T. wants to swap Friday evening with David K.</div>
+                </div>
+                <div class="notification-actions">
+                    <button class="notif-btn approve" onclick="approveRequest(this)">Approve</button>
+                    <button class="notif-btn deny">Deny</button>
+                </div>
+            </div>
+
+            <div class="notification-item pending">
+                <div class="notification-icon">📅</div>
+                <div class="notification-content">
+                    <div class="notification-title">Time Off Request</div>
+                    <div class="notification-desc">Jessica L. requested Jan 10-12 off (Personal)</div>
+                </div>
+                <div class="notification-actions">
+                    <button class="notif-btn approve" onclick="approveRequest(this)">Approve</button>
+                    <button class="notif-btn deny">Deny</button>
+                </div>
+            </div>
+
+            <div class="notification-item approved">
+                <div class="notification-icon">✓</div>
+                <div class="notification-content">
+                    <div class="notification-title">Schedule Published</div>
+                    <div class="notification-desc">All staff notified via SMS • 4 confirmed</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="value">152</div>
+                <div class="label">Total Hours This Week</div>
+            </div>
+            <div class="stat-card">
+                <div class="value blue">4</div>
+                <div class="label">Staff Scheduled</div>
+            </div>
+            <div class="stat-card">
+                <div class="value warning">2</div>
+                <div class="label">Pending Requests</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">98%</div>
+                <div class="label">Schedule Coverage</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function approveRequest(btn) {
+            const item = btn.closest('.notification-item');
+            item.classList.remove('pending');
+            item.classList.add('approved');
+            item.querySelector('.notification-icon').textContent = '✓';
+            item.querySelector('.notification-actions').innerHTML = '<span style="color: #22c55e; font-size: 12px;">✓ Approved</span>';
+        }
+
+        function prevWeek() {
+            document.querySelector('.current-week').textContent = 'Dec 23 - Dec 29, 2024';
+        }
+
+        function nextWeek() {
+            document.querySelector('.current-week').textContent = 'Jan 6 - Jan 12, 2025';
+        }
+    </script>
+</body>
+</html>

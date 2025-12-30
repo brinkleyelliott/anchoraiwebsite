@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow Builder Demo - Anchor AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; overflow-x: hidden; }
+        
+        .demo-banner {
+            background: linear-gradient(135deg, #003366, #cc0000);
+            color: white;
+            text-align: center;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .demo-banner a { color: #ffd700; margin-left: 10px; }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header h1 {
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .header-btn {
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .header-btn:hover {
+            background: #334155;
+        }
+
+        .header-btn.primary {
+            background: #22c55e;
+            border-color: #22c55e;
+            color: white;
+        }
+
+        .header-btn.primary:hover {
+            background: #16a34a;
+        }
+
+        /* Workflow Templates */
+        .templates-section {
+            margin-bottom: 30px;
+        }
+
+        .templates-section h2 {
+            font-size: 1rem;
+            margin-bottom: 16px;
+            color: #94a3b8;
+        }
+
+        .templates-grid {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .template-card {
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            padding: 16px 20px;
+            min-width: 180px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .template-card:hover {
+            border-color: #003366;
+            transform: translateY(-2px);
+        }
+
+        .template-card.active {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .template-card .icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .template-card .name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .template-card .desc {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        /* Workflow Canvas */
+        .workflow-canvas {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 30px;
+            min-height: 500px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .workflow-canvas::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle, #334155 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.5;
+        }
+
+        .workflow-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        /* Workflow Nodes */
+        .workflow-node {
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            padding: 16px 24px;
+            min-width: 280px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .workflow-node:hover {
+            border-color: #475569;
+            transform: scale(1.02);
+        }
+
+        .workflow-node.trigger {
+            border-color: #f59e0b;
+            background: linear-gradient(135deg, #0f172a, rgba(245, 158, 11, 0.1));
+        }
+
+        .workflow-node.action {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, #0f172a, rgba(59, 130, 246, 0.1));
+        }
+
+        .workflow-node.condition {
+            border-color: #a855f7;
+            background: linear-gradient(135deg, #0f172a, rgba(168, 85, 247, 0.1));
+            transform: rotate(0deg);
+        }
+
+        .workflow-node.delay {
+            border-color: #64748b;
+            background: linear-gradient(135deg, #0f172a, rgba(100, 116, 139, 0.1));
+        }
+
+        .node-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .node-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .trigger .node-icon { background: rgba(245, 158, 11, 0.2); }
+        .action .node-icon { background: rgba(59, 130, 246, 0.2); }
+        .condition .node-icon { background: rgba(168, 85, 247, 0.2); }
+        .delay .node-icon { background: rgba(100, 116, 139, 0.2); }
+
+        .node-type {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.6;
+        }
+
+        .node-title {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .node-details {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #334155;
+        }
+
+        /* Connector Lines */
+        .connector {
+            width: 2px;
+            height: 40px;
+            background: #475569;
+            position: relative;
+        }
+
+        .connector::after {
+            content: '▼';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #475569;
+            font-size: 10px;
+        }
+
+        /* Branch connector */
+        .branch-container {
+            display: flex;
+            gap: 40px;
+            position: relative;
+        }
+
+        .branch-container::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 280px);
+            height: 2px;
+            background: #475569;
+        }
+
+        .branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .branch-label {
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+
+        .branch-label.yes {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .branch-label.no {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        /* Add Node Button */
+        .add-node-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #334155;
+            border: 2px dashed #475569;
+            color: #94a3b8;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .add-node-btn:hover {
+            background: #003366;
+            border-color: #003366;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            padding: 20px;
+            background: #1e293b;
+            border-radius: 12px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #22c55e;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        /* Sidebar */
+        .node-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: #1e293b;
+            border-left: 1px solid #334155;
+            padding: 24px;
+            transition: right 0.3s;
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .node-sidebar.open {
+            right: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .sidebar-header h3 {
+            font-size: 1.1rem;
+        }
+
+        .close-sidebar {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .node-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .node-option {
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .node-option:hover {
+            border-color: #003366;
+        }
+
+        .node-option .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .node-option.trigger-opt .icon { background: rgba(245, 158, 11, 0.2); }
+        .node-option.action-opt .icon { background: rgba(59, 130, 246, 0.2); }
+        .node-option.condition-opt .icon { background: rgba(168, 85, 247, 0.2); }
+        .node-option.delay-opt .icon { background: rgba(100, 116, 139, 0.2); }
+
+        .node-option h4 {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .node-option p {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        @media (max-width: 768px) {
+            .workflow-canvas { padding: 20px 10px; }
+            .workflow-node { min-width: 240px; padding: 12px 16px; }
+            .branch-container { flex-direction: column; gap: 20px; }
+            .branch-container::before { display: none; }
+            .stats-bar { flex-wrap: wrap; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-banner">
+        ⚡ DEMO: Visual Workflow Builder - Automate Anything
+        <a href="https://calendly.com/brinkley-anchoraimanagement/30min" target="_blank">Get This For Your Business →</a>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>⚡ Workflow Builder</h1>
+            <div class="header-actions">
+                <button class="header-btn">📋 Duplicate</button>
+                <button class="header-btn">🧪 Test Run</button>
+                <button class="header-btn primary">✓ Save & Activate</button>
+            </div>
+        </div>
+
+        <div class="templates-section">
+            <h2>📁 Start from Template</h2>
+            <div class="templates-grid">
+                <div class="template-card active" onclick="loadWorkflow('booking')">
+                    <div class="icon">📅</div>
+                    <div class="name">New Booking</div>
+                    <div class="desc">Confirm + remind + follow up</div>
+                </div>
+                <div class="template-card" onclick="loadWorkflow('review')">
+                    <div class="icon">⭐</div>
+                    <div class="name">Review Request</div>
+                    <div class="desc">Ask happy customers for reviews</div>
+                </div>
+                <div class="template-card" onclick="loadWorkflow('winback')">
+                    <div class="icon">👋</div>
+                    <div class="name">Win-Back</div>
+                    <div class="desc">Re-engage inactive customers</div>
+                </div>
+                <div class="template-card" onclick="loadWorkflow('birthday')">
+                    <div class="icon">🎂</div>
+                    <div class="name">Birthday</div>
+                    <div class="desc">Auto birthday rewards</div>
+                </div>
+                <div class="template-card" onclick="loadWorkflow('invoice')">
+                    <div class="icon">💰</div>
+                    <div class="name">Invoice Follow-up</div>
+                    <div class="desc">Payment reminders</div>
+                </div>
+                <div class="template-card" onclick="loadWorkflow('blank')">
+                    <div class="icon">➕</div>
+                    <div class="name">Start Blank</div>
+                    <div class="desc">Build from scratch</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="workflow-canvas">
+            <div class="workflow-container" id="workflowContainer">
+                <!-- Trigger -->
+                <div class="workflow-node trigger">
+                    <div class="node-header">
+                        <div class="node-icon">📅</div>
+                        <div>
+                            <div class="node-type">Trigger</div>
+                            <div class="node-title">New Booking Created</div>
+                        </div>
+                    </div>
+                    <div class="node-details">When a customer books an appointment</div>
+                </div>
+
+                <div class="connector"></div>
+
+                <!-- Action 1 -->
+                <div class="workflow-node action">
+                    <div class="node-header">
+                        <div class="node-icon">📱</div>
+                        <div>
+                            <div class="node-type">Action</div>
+                            <div class="node-title">Send Confirmation SMS</div>
+                        </div>
+                    </div>
+                    <div class="node-details">"Hi {name}, your appointment is confirmed for {date} at {time}!"</div>
+                </div>
+
+                <div class="connector"></div>
+
+                <!-- Delay -->
+                <div class="workflow-node delay">
+                    <div class="node-header">
+                        <div class="node-icon">⏰</div>
+                        <div>
+                            <div class="node-type">Delay</div>
+                            <div class="node-title">Wait Until 24 Hours Before</div>
+                        </div>
+                    </div>
+                    <div class="node-details">Pause workflow until appointment is 24 hours away</div>
+                </div>
+
+                <div class="connector"></div>
+
+                <!-- Action 2 -->
+                <div class="workflow-node action">
+                    <div class="node-header">
+                        <div class="node-icon">📱</div>
+                        <div>
+                            <div class="node-type">Action</div>
+                            <div class="node-title">Send Reminder SMS</div>
+                        </div>
+                    </div>
+                    <div class="node-details">"Reminder: You're booked tomorrow at {time}! Reply C to confirm or R to reschedule."</div>
+                </div>
+
+                <div class="connector"></div>
+
+                <!-- Condition -->
+                <div class="workflow-node condition">
+                    <div class="node-header">
+                        <div class="node-icon">🔀</div>
+                        <div>
+                            <div class="node-type">Condition</div>
+                            <div class="node-title">Did They Show Up?</div>
+                        </div>
+                    </div>
+                    <div class="node-details">Check if appointment was marked complete</div>
+                </div>
+
+                <div class="connector" style="height: 20px;"></div>
+
+                <!-- Branches -->
+                <div class="branch-container">
+                    <div class="branch">
+                        <div class="branch-label yes">✓ Yes - Showed</div>
+                        <div class="connector" style="height: 20px;"></div>
+                        <div class="workflow-node action" style="min-width: 220px;">
+                            <div class="node-header">
+                                <div class="node-icon">⭐</div>
+                                <div>
+                                    <div class="node-type">Action</div>
+                                    <div class="node-title">Ask for Review</div>
+                                </div>
+                            </div>
+                            <div class="node-details">Send review request after 2 hours</div>
+                        </div>
+                    </div>
+                    <div class="branch">
+                        <div class="branch-label no">✗ No - No Show</div>
+                        <div class="connector" style="height: 20px;"></div>
+                        <div class="workflow-node action" style="min-width: 220px;">
+                            <div class="node-header">
+                                <div class="node-icon">📧</div>
+                                <div>
+                                    <div class="node-type">Action</div>
+                                    <div class="node-title">Send Reschedule Link</div>
+                                </div>
+                            </div>
+                            <div class="node-details">Offer to rebook their appointment</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="add-node-btn" onclick="openSidebar()">+</button>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-value">2,847</div>
+                <div class="stat-label">Times Run</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">94%</div>
+                <div class="stat-label">Confirmation Rate</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">67%</div>
+                <div class="stat-label">Show Rate ↑12%</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">156</div>
+                <div class="stat-label">Reviews Generated</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Node Sidebar -->
+    <div class="node-sidebar" id="nodeSidebar">
+        <div class="sidebar-header">
+            <h3>Add Step</h3>
+            <button class="close-sidebar" onclick="closeSidebar()">×</button>
+        </div>
+        <div class="node-options">
+            <div class="node-option action-opt">
+                <div class="icon">📱</div>
+                <div>
+                    <h4>Send SMS</h4>
+                    <p>Text message to customer</p>
+                </div>
+            </div>
+            <div class="node-option action-opt">
+                <div class="icon">📧</div>
+                <div>
+                    <h4>Send Email</h4>
+                    <p>Email to customer</p>
+                </div>
+            </div>
+            <div class="node-option action-opt">
+                <div class="icon">🔔</div>
+                <div>
+                    <h4>Send Notification</h4>
+                    <p>Notify your team</p>
+                </div>
+            </div>
+            <div class="node-option action-opt">
+                <div class="icon">📋</div>
+                <div>
+                    <h4>Create Task</h4>
+                    <p>Add to your task list</p>
+                </div>
+            </div>
+            <div class="node-option delay-opt">
+                <div class="icon">⏰</div>
+                <div>
+                    <h4>Wait / Delay</h4>
+                    <p>Pause for time period</p>
+                </div>
+            </div>
+            <div class="node-option condition-opt">
+                <div class="icon">🔀</div>
+                <div>
+                    <h4>If/Then Condition</h4>
+                    <p>Branch based on data</p>
+                </div>
+            </div>
+            <div class="node-option action-opt">
+                <div class="icon">🏷️</div>
+                <div>
+                    <h4>Add Tag</h4>
+                    <p>Tag customer in CRM</p>
+                </div>
+            </div>
+            <div class="node-option action-opt">
+                <div class="icon">💰</div>
+                <div>
+                    <h4>Create Invoice</h4>
+                    <p>Generate and send invoice</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openSidebar() {
+            document.getElementById('nodeSidebar').classList.add('open');
+        }
+
+        function closeSidebar() {
+            document.getElementById('nodeSidebar').classList.remove('open');
+        }
+
+        function loadWorkflow(type) {
+            document.querySelectorAll('.template-card').forEach(c => c.classList.remove('active'));
+            event.target.closest('.template-card').classList.add('active');
+            // In real app, this would load different workflow templates
+        }
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', (e) => {
+            const sidebar = document.getElementById('nodeSidebar');
+            if (sidebar.classList.contains('open') && 
+                !sidebar.contains(e.target) && 
+                !e.target.classList.contains('add-node-btn')) {
+                closeSidebar();
+            }
+        });
+    </script>
+</body>
+</html>
